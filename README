@@ -1,0 +1,66 @@
+//Cojocaru Mihail-Razvan 323CA
+
+	Programul curent primeste ca parametru un fisier de input, ale carui date le
+parseaza, le prelucreaza, dupa care scrie rezultatele in fisierul de ouput
+<nume_fisier_intrare>_out.
+
+	Pentru citire si scriere din fisiere am folosit scheletul de cod de la tema
+anterioara. Parserul la citire este aproape identic cu acela, exceptand expresiile 
+regulate folosite pentru separarea cuvintelor, iar pentru Writer m-am inspirat 
+din metodele de open() si close() din parser.
+
+	Din clasele date in scheletul de cod, am modificat:
+	TimeManager - unde am adaugat functii de get, respectiv setarea valorilor
+in constructor
+	Screen - in constructor, initializarea matricei continute in screen si 
+popularea acesteia cu simbolul unui ecran nou (Symbols.SCREEN_SYMBOL); 
+un getter pentru matrice; metoda drawLineOnScreen, care apeleaza drawLine din
+DrawManager.
+	
+	Cele mai importante sunt clasele cu diferitele tipuri de proiectile:
+1	TriGrapeShot
+2 	Carcass
+3 	CanisterShot
+4 	ChainShot
+5 	Shrapnel
+6 	HeatedShot
+7 	SpiderShot
+8 	SimpleShell
+
+	SimpleShell este proiectilul cel mai basic, care implementeaza clasa
+abstracta projectile. Acesta este practic radacina lantului de mostenire. Avand
+in vedere ca acest proiectil nu se poate transforma, metodele sale sunt simple.
+Shoot apeleaza hitScreenAction, in timp ce hitScreenAction pur si simplu
+deseneaza un punct pe ecran, folosind drawLineOnScreen(din Screen).
+
+	SpiderShot este urmatorul in lantul de mostenire, si implementeaza unele
+metode folosite in continuare de urmatoarele clase din lantul de mostenire.
+	- calculateShapeChangingDist
+	- calculateNewRef
+	Sunt folosite de metodele shoot pentru recalcularea distantei ref, respectiv
+calcularea distantei de schimbare a tipului de proiectil, in functie de ID.
+	In SpiderShot, precum si in urmatoarele clase din lantul de mostenire avem
+clase anonime care extind BasicShape, folosite pentru desenarea formelor
+geometrice corespunzatoare. Aici calculam varfurile figurilor geometrice si 
+folosim drawLineOnScreen pentru unirea varfurilor cu simbolurile respective.
+	Metoda de shoot calculeaza distanta de schimbare a tipului de proiectil si
+in functie de aceasta distanta, schimba pozitia glontului(respectiv centrul
+de greutate al viitoarei figuri), respectiv referinta pentru desenarea figurii.
+Daca distanta este suficient de mare, tipul proiectilului se schimba, si 
+se apeleaza metoda shoot din superclasa.
+	
+	In continuare, nu voi explica fiecare proiectil in parte deoarece sunt
+asemanatoare cu SpiderShot, exceptand cele 2 metode de calcul. Fiecare clasa
+contine o metoda hitScreenAction<class> folosita pentru a desena pe ecran
+forma corespunzatoare proiectilului.
+
+
+Probleme intampinate in rezolvarea problemei:
+	Initial, am incercat sa suprascriu ambele metode ale clasei Projectile,
+dar apoi am observat ca era imposibila accesarea metodei hitScreenAction a 
+clasei parinte din interiorul metodei shoot a clasei parinte. Din aceasta cauza,
+am ales sa creez cate o metoda hitScreenAction<class> pentru fiecare proiectil.
+Singura clasa care suprascrie hitScreenAction din Projectile este SimpleShell.
+	Pentru BasicShape am folosit clase anonime, deoarece mi s-a parut mai comod
+si mai lizibil decat definirea unor clase separate care sa mosteneasca BasicShape.
+	
